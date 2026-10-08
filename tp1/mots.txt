@@ -1,0 +1,7 @@
+python
+reseau
+ordinateur
+clavier
+serveur
+éléphant
+Python
