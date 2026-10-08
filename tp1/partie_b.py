@@ -1,24 +1,26 @@
+"""Partie B : Devine le nombre."""
+
 import random
 
-NB_ESSAIS_MAX = 10
+ESSAIS_MAX = 10
 
 
 def demander_entier(message):
+    """Redemande tant que la saisie n'est pas un entier."""
     while True:
-        texte = input(message)
         try:
-            return int(texte)
+            return int(input(message))
         except ValueError:
             print("Entre un nombre entier.")
 
 
-def jouer(borne_min, borne_max):
-    secret = random.randint(borne_min, borne_max)
-    print(f"Devine le nombre entre {borne_min} et {borne_max} ({NB_ESSAIS_MAX} essais).")
+def jouer(mini, maxi):
+    """Une partie. Renvoie True si le joueur gagne."""
+    secret = random.randint(mini, maxi)
+    print(f"Devine le nombre entre {mini} et {maxi} ({ESSAIS_MAX} essais).")
 
-    for essai in range(1, NB_ESSAIS_MAX + 1):
-        proposition = demander_entier(f"Essai {essai}/{NB_ESSAIS_MAX} : ")
-
+    for essai in range(1, ESSAIS_MAX + 1):
+        proposition = demander_entier(f"Essai {essai}/{ESSAIS_MAX} : ")
         if proposition < secret:
             print("Trop petit")
         elif proposition > secret:
@@ -32,15 +34,16 @@ def jouer(borne_min, borne_max):
 
 
 def main():
-    rejouer = True
-    while rejouer:
-        borne_min = demander_entier("Borne minimale : ")
-        borne_max = demander_entier("Borne maximale : ")
-        if borne_min >= borne_max:
+    rejouer = "o"
+    while rejouer == "o":
+        mini = demander_entier("Borne minimale : ")
+        maxi = demander_entier("Borne maximale : ")
+        if mini >= maxi:
             print("La borne minimale doit être plus petite que la maximale.")
             continue
-        jouer(borne_min, borne_max)
-        rejouer = input("Rejouer ? (o/n) : ").strip().lower() == "o"
+        jouer(mini, maxi)
+        rejouer = input("Rejouer ? (o/n) : ").strip().lower()
 
 
-main()
+if __name__ == "__main__":
+    main()
