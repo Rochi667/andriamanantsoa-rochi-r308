@@ -1,3 +1,5 @@
+import json
+
 from partie_a import Livre, Utilisateur
 
 
@@ -28,6 +30,8 @@ class Bibliotheque:
         livre = self.livres.get(titre)
         if user is None or livre is None:
             return False
+        if len(user.emprunts) >= Utilisateur.LIMITE_EMPRUNTS:
+            return False
         return user.emprunter_livre(livre)
 
     def rendre(self, nom, titre):
@@ -50,6 +54,26 @@ class Bibliotheque:
             print(f"  - {l.titre} ({l.auteur}, {l.annee}) par {l.emprunteur}")
         if not pris:
             print("  (aucun)")
+
+    def stats(self):
+        """Nombre de livres, d'emprunts et emprunts par utilisateur."""
+        par_user = {nom: len(u.emprunts) for nom, u in self.utilisateurs.items()
+                    if u.emprunts}
+        return {"total": len(self.livres),
+                "empruntes": sum(1 for l in self.livres.values() if not l.disponible),
+                "par_utilisateur": par_user}
+
+    def rechercher_par_auteur(self, auteur):
+        """Livres dont l'auteur contient le texte (sans tenir compte de la casse)."""
+        auteur = auteur.strip().lower()
+        return [l for l in self.livres.values() if auteur and auteur in l.auteur.lower()]
+
+    def exporter_json(self, chemin):
+        donnees = [{"titre": l.titre, "auteur": l.auteur, "annee": l.annee,
+                    "disponible": l.disponible, "emprunteur": l.emprunteur}
+                   for l in self.livres.values()]
+        with open(chemin, "w", encoding="utf-8") as f:
+            json.dump(donnees, f, ensure_ascii=False, indent=2)
 
 
 if __name__ == "__main__":

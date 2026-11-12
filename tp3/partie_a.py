@@ -32,6 +32,8 @@ class Livre:
 class Utilisateur:
     """Un utilisateur et la liste de ses emprunts."""
 
+    LIMITE_EMPRUNTS = 3
+
     def __init__(self, nom):
         self.nom = nom
         self.emprunts = []  # liste de Livre
